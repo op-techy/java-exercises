@@ -59,6 +59,10 @@ public class MiniProject {
             case 2 -> System.out.println("Result: " + (num1 - num2));
             case 3 -> System.out.println("Result: " + (num1 * num2));
             case 4 -> {
+                // TODO: 6 - Inside case 4, handle division by zero with an if statement
+                // If the second number is 0, print "Error: Cannot divide by zero"
+                // Otherwise, print the result of the division
+
                 if (num2 == 0){
                     System.out.println("Error: Cannot divide by zero");
                 }   else {
@@ -69,9 +73,7 @@ public class MiniProject {
         }
 
 
-        // TODO: 6 - Inside case 4, handle division by zero with an if statement
-        // If the second number is 0, print "Error: Cannot divide by zero"
-        // Otherwise, print the result of the division
+        sc.close();
 
     }
 }
