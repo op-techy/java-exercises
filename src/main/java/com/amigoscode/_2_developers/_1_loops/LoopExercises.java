@@ -44,15 +44,9 @@ public class LoopExercises {
         //  Use 'break' to stop if sum exceeds 100. Add the current number to sum otherwise.
 
         for (int i = 1; i <= n ; i++) {
-            if (i % 3 == 0){
-                continue;
-            }
-            else if (sum > 100) {
-                break;
-            }
-            else {
-                sum += i;
-            }
+            if (i % 3 == 0) continue;
+            sum += i;
+            if (sum > 100) break;
         }
         return sum;
     }
@@ -72,8 +66,8 @@ public class LoopExercises {
         //  When the target is found, set result to "Found at [row][col]" and
         //  use 'break search;' to exit both loops.
 
-        search: for (int row = 0; row < matrix.length - 1; row++) {
-            for (int col = 0; col < matrix[row].length-1; col++) {
+        search: for (int row = 0; row < matrix.length; row++) {
+            for (int col = 0; col < matrix[row].length; col++) {
                 if (matrix[row][col] == target){
                     result = "Found at [" + row + "][" + col + "]";
                     break search;
