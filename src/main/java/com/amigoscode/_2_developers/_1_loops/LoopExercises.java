@@ -160,9 +160,7 @@ public class LoopExercises {
         while (true){
             attempts++;
             int guess = random.nextInt(100) + 1;
-            if (guess == target){
-                break;
-            }
+            if (guess == target) break;
         }
         return attempts;
     }
