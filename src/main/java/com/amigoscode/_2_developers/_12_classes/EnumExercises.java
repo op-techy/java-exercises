@@ -12,19 +12,31 @@ public class EnumExercises {
     // TODO: 1 - Create an enum called Season with four constants:
     //  SPRING, SUMMER, AUTUMN, WINTER
     //  For now, just declare them without any fields or methods.
+    enum Season{
+        SPRING ("Flowers bloom"),
+        SUMMER ("Sun shines"),
+        AUTUMN ("Leaves fall"),
+        WINTER ("Snow falls");
 
+        // TODO: 2 - Modify the Season enum to add:
+        //  - A private final String 'description' field
+        //  - A constructor that takes a String description and assigns it
+        //  - Update each constant to pass a description, e.g.:
+        //    SPRING("Flowers bloom"), SUMMER("Sun shines"),
+        //    AUTUMN("Leaves fall"), WINTER("Snow falls")
+        //  Note: Enum constructors are always private (even without the keyword).
+        private final String description;
 
-    // TODO: 2 - Modify the Season enum to add:
-    //  - A private final String 'description' field
-    //  - A constructor that takes a String description and assigns it
-    //  - Update each constant to pass a description, e.g.:
-    //    SPRING("Flowers bloom"), SUMMER("Sun shines"),
-    //    AUTUMN("Leaves fall"), WINTER("Snow falls")
-    //  Note: Enum constructors are always private (even without the keyword).
+        Season (String description){
+            this.description = description;
+        }
 
-
-    // TODO: 3 - Add a method getDescription() to the Season enum that
-    //  returns the description field.
+        // TODO: 3 - Add a method getDescription() to the Season enum that
+        //  returns the description field.
+        public String getDescription() {
+            return description;
+        }
+    }
 
 
     // TODO: 4 - Create an enum called Priority with three constants:
@@ -34,6 +46,21 @@ public class EnumExercises {
     //  - A private final int 'level' field
     //  - A constructor that takes an int level
     //  - A getter getLevel()
+    enum Priority{
+        LOW(1),
+        MEDIUM(2),
+        HIGH(3);
+
+        private final int level;
+
+        Priority(int level){
+            this.level = level;
+        }
+
+        public int getLevel() {
+            return level;
+        }
+    }
 
 
     public static void main(String[] args) {
@@ -42,6 +69,13 @@ public class EnumExercises {
         //  For each season, print a message like "Spring: Flowers bloom"
         //  using the getDescription() method.
         //  Test with Season.SUMMER.
+        Season currentSeason = Season.SUMMER;
+        switch (currentSeason){
+            case Season.SUMMER -> IO.println("Summer: " +Season.SUMMER.getDescription());
+            case Season.SPRING -> IO.println("Spring: " +Season.SPRING.getDescription());
+            case Season.AUTUMN -> IO.println("Autumn: " +Season.AUTUMN.getDescription());
+            case Season.WINTER -> IO.println("Winter: " +Season.WINTER.getDescription());
+        }
 
 
         System.out.println("\n=== Iterate Over Enum Values ===");
@@ -49,6 +83,12 @@ public class EnumExercises {
         //  Loop through them and print each one with its description and ordinal.
         //  Example output: "0: SPRING - Flowers bloom"
         //  Also iterate over Priority.values() and print each with its level.
-
+        for (Season season : Season.values()){
+            IO.println(season.ordinal() + ": " + season + " - " + season.getDescription());
+        }
+        IO.println();
+        for (Priority priority : Priority.values()){
+            IO.println(priority + ": Level " + priority.getLevel());
+        }
     }
 }
