@@ -47,16 +47,15 @@ public class ClassesAndObjects {
         //  Hint: use instanceof, then cast and compare fields.
         //  Also override hashCode() using Objects.hash(name, age).
         @Override
-        public boolean equals(Object object){
-            if (this == object) return true;
-            if (!(object instanceof Person)) return false;
+        public boolean equals(Object object) {
+            if (object == null || getClass() != object.getClass()) return false;
             Person person = (Person) object;
             return age == person.age && Objects.equals(name, person.name);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(name,age);
+            return Objects.hash(name, age);
         }
     }
 
