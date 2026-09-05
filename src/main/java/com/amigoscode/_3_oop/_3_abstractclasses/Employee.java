@@ -17,25 +17,51 @@ import java.util.List;
  * - Inner classes (classes defined in the same file)
  */
 
-// TODO: 1 - Make the Employee class abstract. Add two protected fields:
-//   - name (String)
-//   - baseSalary (double)
-//   Create a constructor that takes both fields and assigns them.
-class Employee {
+abstract class Employee {
 
-    // TODO: 2 - Declare an abstract method: double calculatePay()
-    //   Each subclass will compute pay differently.
+    protected String name;
+    protected double baseSalary;
+
+    public Employee(double baseSalary, String name) {
+        this.baseSalary = baseSalary;
+        this.name = name;
+    }
+
+    abstract double calculatePay();
 
 
     // TODO: 3 - Create a concrete method: String getDetails()
     //   Return: "<name> - Pay: $<calculatePay()>"
     //   Use String.format("%.2f", calculatePay()) for formatting.
+    public String getDetails(){
+        return  this.name+
+                " - Pay: $" +
+                String.format("%.2f", calculatePay());
+    }
 
 }
 
 // TODO: 4 - Create a FullTimeEmployee class that extends Employee.
 //   - Constructor takes name and baseSalary, calls super(name, baseSalary)
 //   - Implement calculatePay() to simply return baseSalary
+class FullTimeEmployee extends Employee{
+
+    public FullTimeEmployee(double baseSalary, String name) {
+        super(baseSalary, name);
+    }
+
+    @Override
+    double calculatePay() {
+        return baseSalary;
+    }
+
+    @Override
+    public String toString() {
+        return "FullTimeEmployee{" +
+                "name='" + name + '\'' +
+                '}';
+    }
+}
 
 
 // TODO: 5 - Create a ContractEmployee class that extends Employee.
@@ -43,6 +69,29 @@ class Employee {
 //   - Constructor takes name, hourlyRate, and hoursWorked
 //     (pass name and 0.0 as baseSalary to super)
 //   - Implement calculatePay() to return hourlyRate * hoursWorked
+class ContractEmployee extends Employee{
+
+    private double hourlyRate;
+    private int hoursWorked;
+
+    public ContractEmployee(double baseSalary, String name, double hourlyRate, int hoursWorked) {
+        super(0.0, name);
+        this.hourlyRate = hourlyRate;
+        this.hoursWorked = hoursWorked;
+    }
+
+    @Override
+    double calculatePay() {
+        return hourlyRate * hoursWorked;
+    }
+
+    @Override
+    public String toString() {
+        return "ContractEmployee{" +
+                "name='" + name + '\'' +
+                '}';
+    }
+}
 
 
 // TODO: 6 - In the EmployeeDemo class below, complete the main method:
@@ -57,5 +106,33 @@ class Employee {
 class EmployeeDemo {
     public static void main(String[] args) {
         // Complete TODOs 6 and 7 here
+        List<Employee> employees = new ArrayList<>(
+                List.of(
+                        new FullTimeEmployee(100_000, "Joe"),
+                        new ContractEmployee(0.0, "John", 70.0, 2_080)
+                )
+        );
+
+        for (Employee employee : employees){
+            System.out.println(employee.getDetails());
+        }
+
+        System.out.println(getHighestPaid(employees));
+    }
+
+    static Employee getHighestPaid(List<Employee> employees){
+        double maxPay = 0.0;
+        Employee highestPaid = null;
+
+        for (int i = 0; i < employees.size(); i++) {
+            double pay = employees.get(i).calculatePay();
+
+            if (pay <= maxPay) continue;
+
+            maxPay = pay;
+            highestPaid = employees.get(i);
+        }
+
+        return highestPaid;
     }
 }
