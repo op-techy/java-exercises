@@ -14,35 +14,39 @@ package com.amigoscode._3_oop._2_inheritance;
  */
 public class Vehicle {
 
-    // TODO: 1 - Declare three protected fields:
-    //   - make (String)    e.g., "Toyota"
-    //   - model (String)   e.g., "Camry"
-    //   - year (int)       e.g., 2024
+    protected String make;
+    protected String model;
+    protected int year;
 
+    public Vehicle(String make, String model, int year) {
+        this.make = make;
+        this.model = model;
+        this.year = year;
+    }
 
-    // TODO: 2 - Create a constructor that takes make, model, and year
-    //   and assigns them to the fields.
+    public void start(){
+        System.out.printf("%s %s engine is starting... Vroom!%n", this.make, this.model);
+        System.out.println();
+    }
 
+    public String getInfo(){
+        return "%s %s %s".formatted(this.year, this.make, this.model);
+    }
 
-    // TODO: 3 - Create a start() method that prints:
-    //   "<make> <model> engine is starting... Vroom!"
-    //   For example: "Toyota Camry engine is starting... Vroom!"
-
-
-    // TODO: 4 - Create a getInfo() method that returns a String:
-    //   "<year> <make> <model>"
-    //   For example: "2024 Toyota Camry"
-
-
-    // TODO: 5 - Override toString() to return:
-    //   "Vehicle{make='XXX', model='XXX', year=XXX}"
-
+    @Override
+    public String toString() {
+        return "Vehicle{" +
+                "make='" + make + '\'' +
+                ", model='" + model + '\'' +
+                ", year=" + year +
+                '}';
+    }
 
     public static void main(String[] args) {
         // Uncomment and test after completing the TODOs:
-        // Vehicle vehicle = new Vehicle("Toyota", "Camry", 2024);
-        // System.out.println(vehicle);
-        // vehicle.start();
-        // System.out.println(vehicle.getInfo());
+         Vehicle vehicle = new Vehicle("Toyota", "Camry", 2024);
+         System.out.println(vehicle);
+         vehicle.start();
+         System.out.println(vehicle.getInfo());
     }
 }
