@@ -40,15 +40,10 @@ public class ClassesAndObjects {
             return "Person{name='" + name + "', age=" + age + "}";
         }
 
-        // TODO: 5 - Add an equals() method to Person that:
-        //  - Returns true if the other object is a Person with the same name and age
-        //  - Handles null and different types correctly
-        //  - Annotate with @Override
-        //  Hint: use instanceof, then cast and compare fields.
-        //  Also override hashCode() using Objects.hash(name, age).
         @Override
         public boolean equals(Object object) {
-            if (object == null || getClass() != object.getClass()) return false;
+            if (this == object) return true;
+            if(!(object instanceof Person)) return false;
             Person person = (Person) object;
             return age == person.age && Objects.equals(name, person.name);
         }
