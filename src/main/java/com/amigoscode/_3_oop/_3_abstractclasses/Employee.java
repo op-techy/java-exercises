@@ -121,16 +121,12 @@ class EmployeeDemo {
     }
 
     static Employee getHighestPaid(List<Employee> employees){
-        double maxPay = 0.0;
         Employee highestPaid = null;
 
-        for (int i = 0; i < employees.size(); i++) {
-            double pay = employees.get(i).calculatePay();
-
-            if (pay <= maxPay) continue;
-
-            maxPay = pay;
-            highestPaid = employees.get(i);
+        for (Employee e : employees) {
+            if (highestPaid == null || e.calculatePay() > highestPaid.calculatePay()){
+                highestPaid = e;
+            }
         }
 
         return highestPaid;
