@@ -18,13 +18,32 @@ package com.amigoscode._3_oop._5_dependencyinjection;
 //   boolean charge(double amount)
 //   Also create a concrete StripeGateway class that implements it.
 //   In charge(), print "[Stripe] Charging $<amount>" and return true.
+interface PaymentGateway{
+    boolean charge(double amount);
+}
 
+class StripeGateway implements PaymentGateway{
+    @Override
+    public boolean charge(double amount) {
+        System.out.printf("[Stripe] Charging $%f\n",amount);
+        return true;
+    }
+}
 
 // TODO: 2 - Create an OrderRepository interface with:
 //   void save(Order order)
 //   Also create a concrete InMemoryOrderRepository class that implements it.
 //   In save(), print "[Repository] Order saved: <order>"
+interface OrderRepository{
+    void save(Order order);
+}
 
+class InMemoryOrderRepository implements OrderRepository{
+    @Override
+    public void save(Order order) {
+        System.out.printf("[Repository] Order saved: %s\n", order);
+    }
+}
 
 // TODO: 3 - Create an Order class with three fields:
 //   - id (String)
@@ -32,6 +51,20 @@ package com.amigoscode._3_oop._5_dependencyinjection;
 //   - amount (double)
 //   Create a constructor, getters, and a toString() method.
 //   (You may use a record if you prefer: record Order(String id, String item, double amount) {} )
+record Order(String id, String item, double amount) {
+    public Order(double amount, String id, String item) {
+        this(id, item, amount);
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "amount=" + amount +
+                ", id='" + id + '\'' +
+                ", item='" + item + '\'' +
+                '}';
+    }
+}
 
 
 // TODO: 4 - Create the OrderProcessor class.
@@ -39,7 +72,24 @@ package com.amigoscode._3_oop._5_dependencyinjection;
 //     - paymentGateway (PaymentGateway)
 //     - orderRepository (OrderRepository)
 //   - Create a constructor that takes both as parameters (constructor injection).
+class OrderProcessor{
+    private final PaymentGateway gateway;
+    private final OrderRepository repository;
 
+    public OrderProcessor(PaymentGateway gateway, OrderRepository repository) {
+        this.gateway = gateway;
+        this.repository = repository;
+    }
+
+    public boolean processOrder(Order order){
+        if(gateway.charge(order.amount())){
+            repository.save(order);
+            return true;
+        }
+        System.out.printf("Payment failed for order: %s\n", order.id());
+        return false;
+    }
+}
 
 // TODO: 5 - In OrderProcessor, add a method:
 //   boolean processOrder(Order order)
@@ -61,5 +111,10 @@ class OrderProcessorDemo {
         //     repository it uses. You could swap in a PayPalGateway
         //     or a DatabaseOrderRepository without changing OrderProcessor.
 
+        PaymentGateway paymentGateway = new StripeGateway();
+        OrderRepository orderRepository = new InMemoryOrderRepository();
+        OrderProcessor orderProcessor = new OrderProcessor(paymentGateway,orderRepository);
+        Order order = new Order(29.99, "ORD-001", "Java Course");
+        orderProcessor.processOrder(order);
     }
 }
