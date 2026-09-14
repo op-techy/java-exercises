@@ -1,8 +1,5 @@
 package com.amigoscode._3_oop._6_solid;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Exercise: SOLID Principles
  *
@@ -47,6 +44,42 @@ public class SolidExercises {
     //     that prints "Sending welcome email to <email>..."
     //   Then create a refactored UserManager that uses all three via
     //   constructor injection and has a createUser(name, email) method.
+    static class UserValidator{
+        void validate(String name, String email){
+            if (name == null || name.isEmpty()) throw new IllegalArgumentException("Invalid name\n");
+            if (!email.contains("@")) throw new IllegalArgumentException("Invalid email\n");
+        }
+    }
+
+    static class UserRepository{
+        void save(String name, String email){
+            System.out.printf("Saving user %s to database...\n", name);
+        }
+    }
+
+    static class UserNotifier{
+        void sendWelcome(String email){
+            System.out.printf("Sending welcome email to %s...\n", email);
+        }
+    }
+
+    static class UserManager{
+        private final UserValidator validator;
+        private final UserRepository repository;
+        private final UserNotifier notifier;
+
+        public UserManager(UserValidator validator, UserRepository repository, UserNotifier notifier) {
+            this.validator = validator;
+            this.repository = repository;
+            this.notifier = notifier;
+        }
+
+        void createUser(String name, String email){
+            validator.validate(name,email);
+            repository.save(name, email);
+            notifier.sendWelcome(email);
+        }
+    }
 
 
     // =========================================================================
@@ -75,6 +108,29 @@ public class SolidExercises {
     //     double calculate(Discount discount, double price)
     //     that just calls discount.apply(price)
     //   Now new discount types can be added without modifying DiscountCalculator.
+    interface Discount {
+        double apply(double price);
+    }
+
+    static class SeasonalDiscount implements Discount{
+        @Override
+        public double apply(double price) {
+            return price * 0.10;
+        }
+    }
+
+    static class ClearanceDiscount implements Discount{
+        @Override
+        public double apply(double price) {
+            return price * 0.50;
+        }
+    }
+
+    static class DiscountCalculator{
+        double calculate(Discount discount, double price){
+           return discount.apply(price);
+        }
+    }
 
 
     // =========================================================================
@@ -108,7 +164,24 @@ public class SolidExercises {
     //   - Create an ImmutableSquare class implementing LspShape with
     //     a final field side, constructor, and area() returning side * side
     //   Now neither class pretends to be the other. Both satisfy LspShape.
+    interface LspShape{
+        int area();
+    }
 
+    static class ImmutableSquare implements LspShape{
+        private final int width;
+        private final int height;
+
+        public ImmutableSquare(int width, int height) {
+            this.width = width;
+            this.height = height;
+        }
+
+        @Override
+        public int area() {
+            return width * height;
+        }
+    }
 
     // =========================================================================
     // ISP - Interface Segregation Principle
@@ -144,7 +217,41 @@ public class SolidExercises {
     //   - HumanWorker class implementing Workable, Eatable, Sleepable
     //   - RobotWorker class implementing only Workable
     //   Now RobotWorker is not forced to implement methods it cannot use.
+    interface Workable{
+        void work();
+    }
 
+    interface Eatable{
+        void eat();
+    }
+
+    interface Sleepable{
+        void sleep();
+    }
+
+    static class HumanWorker implements Workable, Eatable, Sleepable{
+        @Override
+        public void eat() {
+            System.out.println("Human eating");
+        }
+
+        @Override
+        public void sleep() {
+            System.out.println("Human sleeping");
+        }
+
+        @Override
+        public void work() {
+            System.out.println("Human working");
+        }
+    }
+
+    static class RobotWorker implements Workable{
+        @Override
+        public void work() {
+            System.out.println("Robot working");
+        }
+    }
 
     // =========================================================================
     // DIP - Dependency Inversion Principle
@@ -175,7 +282,35 @@ public class SolidExercises {
     //     (its query() returns "PostgreSQL result for: " + sql)
     //   - Create ReportGenerator that takes Database in its constructor
     //     (constructor injection) and uses it in generateReport()
+    interface Database{
+        String query(String sql);
+    }
 
+    static class MySQLDatabase implements Database{
+        @Override
+        public String query(String sql) {
+            return "MySQL result for: \n" + sql;
+        }
+    }
+
+    static class PostgreSQLDatabase implements Database{
+        @Override
+        public String query(String sql) {
+            return "PostgreSQL result for: \n" + sql;
+        }
+    }
+
+    static class ReportGenerator{
+        private Database db;
+
+        public ReportGenerator(Database db) {
+            this.db = db;
+        }
+
+        String generateReport(){
+            return db.query("SELECT * FROM reports\n");
+        }
+    }
 
     // =========================================================================
     // Main method to test all exercises
@@ -185,16 +320,34 @@ public class SolidExercises {
 
         // TODO: 6 - Test SRP: Create UserValidator, UserRepository, UserNotifier,
         //   and a refactored UserManager. Call createUser("Alice", "alice@test.com").
+        UserValidator validator = new UserValidator();
+        UserRepository repository = new UserRepository();
+        UserNotifier notifier = new UserNotifier();
 
+        UserManager manager = new UserManager(validator, repository, notifier);
+        manager.createUser("Alice", "alice@test.com");
 
         // TODO: 7 - Test OCP: Create a DiscountCalculator and several Discount
         //   implementations. Calculate discounts for a $100 item and print results.
+        Discount seasonal = new SeasonalDiscount();
+        Discount clearance = new ClearanceDiscount();
+
+        DiscountCalculator calculator = new DiscountCalculator();
+        System.out.println(calculator.calculate(seasonal,100));
+        System.out.println(calculator.calculate(clearance,100));
 
 
         // TODO: 8 - Test DIP: Create a ReportGenerator with MySQLDatabase,
         //   generate a report. Then create another with PostgreSQLDatabase
         //   and generate a report. Print both results to show the
         //   implementation was swapped without changing ReportGenerator.
+        Database mysql = new MySQLDatabase();
+        ReportGenerator report = new ReportGenerator(mysql);
+        System.out.println(report.generateReport());
+
+        Database postgres = new PostgreSQLDatabase();
+        report = new ReportGenerator(postgres);
+        System.out.println(report.generateReport());
 
     }
 }
