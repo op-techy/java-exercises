@@ -18,10 +18,12 @@ public class ClassCastProblem {
 
         // TODO: 1 - Create a raw (non-generic) ArrayList without any type parameter.
         //  Hint: List list = new ArrayList();
-
+        List nonGeneric = new ArrayList();
 
         // TODO: 2 - Add a String "Hello" and an Integer 42 to the raw list.
         //  This compiles fine because raw lists accept any Object.
+        nonGeneric.add("Hello");
+        nonGeneric.add(42);
 
 
         // TODO: 3 - Iterate through the list and try to cast every element to String.
@@ -29,6 +31,14 @@ public class ClassCastProblem {
         //  Inside the loop, cast list.get(i) to String and print it.
         //  This will compile, but will throw ClassCastException at runtime
         //  when it reaches the Integer element.
+        try {
+            for (int i = 0; i < nonGeneric.size(); i++) {
+                System.out.println((String) nonGeneric.get(i));
+            }
+        } catch (ClassCastException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println();
 
 
         // TODO: 4 - Wrap the casting code from TODO 3 in a try-catch block
@@ -40,6 +50,10 @@ public class ClassCastProblem {
         //  (a) Why did the ClassCastException occur?
         //  (b) How do generics (e.g., List<String>) prevent this problem?
         //  (c) At what stage (compile-time or runtime) do generics catch type errors?
+        System.out.println("a. We get the ClassCastException because we're attempting to cast an Integer object to String");
+        System.out.println("b. By setting type argument to String, non-String objects get flagged before runtime");
+        System.out.println("c. Compile-time");
+
 
     }
 }
