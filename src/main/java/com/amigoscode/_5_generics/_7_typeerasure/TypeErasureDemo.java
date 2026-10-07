@@ -1,6 +1,7 @@
 package com.amigoscode._5_generics._7_typeerasure;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -23,12 +24,28 @@ public class TypeErasureDemo {
         //  using == and print the result.
         //  Example: System.out.println(stringList.getClass() == intList.getClass());
         //  Are they the same class at runtime? Add a comment explaining why.
+        List<String> stringList = new ArrayList<>();
+        stringList.add("Hello");
+        stringList.add("World");
+        List<Integer> intList = new ArrayList<>();
+        intList.add(1);
+        intList.add(2);
+        intList.add(3);
+        IO.println(intList.getClass() == stringList.getClass());
+        // They're both Lists, the only difference is their contents
 
 
         // TODO: 2 - Demonstrate that generic type info is lost at runtime.
         //  Print the getClass().getName() of both lists from TODO 1.
         //  Add a comment explaining what you see -- do the class names
         //  include <String> or <Integer>? Why not?
+        IO.println(intList.getClass().getName());
+        IO.println(stringList.getClass().getName());
+        // Generic type information is erased at runtime.
+        // Both lists are ArrayList objects, so getClass().getName()
+        // returns "java.util.ArrayList" rather than including <Integer> or <String>.
+        // Generics provide type safety at compile time; the JVM generally
+        // does not retain these generic type arguments for the object's runtime class.
 
 
         // TODO: 3 - Show that instanceof works with raw types but NOT with
