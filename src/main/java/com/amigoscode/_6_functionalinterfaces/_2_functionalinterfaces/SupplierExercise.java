@@ -19,17 +19,32 @@ public class SupplierExercise {
 
         // TODO: 1 - Create a Supplier<String> called 'helloSupplier' that
         //  returns "Hello World". Call get() and print the result.
+        Supplier<String> helloSupplier = () -> "Hello World";
+        IO.println(helloSupplier.get());
+        IO.println();
 
 
         // TODO: 2 - Create a Supplier<Double> called 'randomSupplier' that
         //  returns a random number using Math.random(). Call get() three times
         //  and print each result to observe different values.
+        Supplier<Double> randomSupplier = () -> Math.random();
+        IO.println(randomSupplier.get());
+        IO.println(randomSupplier.get());
+        IO.println(randomSupplier.get());
+        IO.println();
 
 
         // TODO: 3 - Create a Supplier<List<String>> called 'listFactory' that
         //  returns a new empty ArrayList each time get() is called. Call it
         //  twice, add "A" to the first list, and print both lists to show
         //  they are independent.
+        Supplier<List<String>> listFactory = ArrayList::new;
+        List<String> firstList = listFactory.get();
+        List<String> secondList = listFactory.get();
+        firstList.add("A");
+        IO.println("First List: " + firstList);
+        IO.println("Second List: " + secondList);
+        IO.println();
 
 
         // TODO: 4 - Demonstrate lazy initialization: Create a Supplier<String>
@@ -37,14 +52,25 @@ public class SupplierExercise {
         //  returns "Result". Show that the message is NOT printed until get()
         //  is actually called by printing "Before get()" and "After get()"
         //  around the call.
-
+        Supplier<String> expensiveOperation = () -> {
+            IO.println("Computing...");
+            return "Result";
+        };
+        IO.println("Before get()");
+        IO.println(expensiveOperation.get());
+        IO.println("After get()");
+        IO.println();
 
         // TODO: 5 - Create a Supplier<LocalDateTime> called 'now' that returns
         //  LocalDateTime.now(). Call get() and print the current date/time.
+        Supplier<LocalDateTime> now = () -> LocalDateTime.now();
+        IO.println(now.get());
+        IO.println();
 
 
         // TODO: 6 - Call the generateMultiple method below with your
         //  randomSupplier and print the returned list of 5 random numbers.
+        IO.println(generateMultiple(randomSupplier,5));
 
     }
 
