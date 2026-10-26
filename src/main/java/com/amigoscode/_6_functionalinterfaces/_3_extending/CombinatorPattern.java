@@ -19,11 +19,18 @@ public class CombinatorPattern {
 
     // TODO: 1 - Create a ValidationResult enum with values:
     //  SUCCESS, EMAIL_NOT_VALID, NOT_ADULT, NAME_EMPTY
+    static enum ValidationResult {
+        SUCCESS,
+        EMAIL_NOT_VALID,
+        NOT_ADULT,
+        NAME_EMPTY
+    }
 
 
     // TODO: 2 - Create a Customer record (or class) with three fields:
     //  String name, String email, int age
     //  Hint for record: record Customer(String name, String email, int age) {}
+    record Customer(String name, String email, int age){}
 
 
     // TODO: 3 - Create a @FunctionalInterface called CustomerValidator that
@@ -45,6 +52,37 @@ public class CombinatorPattern {
     //          ? ValidationResult.SUCCESS
     //          : ValidationResult.EMAIL_NOT_VALID;
     //  }
+    @FunctionalInterface
+    interface CustomerValidator
+            extends Function<Customer,ValidationResult>{
+
+        default CustomerValidator and(CustomerValidator other){
+            return customer -> {
+                ValidationResult result = this.apply(customer);
+                return result != ValidationResult.SUCCESS
+                        ? result
+                        : other.apply(customer);
+            };
+        }
+
+        static CustomerValidator isEmailValid(){
+            return customer -> customer.email().contains("@")
+                    ? ValidationResult.SUCCESS
+                    : ValidationResult.EMAIL_NOT_VALID;
+        }
+
+        static CustomerValidator isAdult() {
+            return customer -> customer.age() >= 18
+                    ? ValidationResult.SUCCESS
+                    : ValidationResult.NOT_ADULT;
+        }
+
+        static CustomerValidator isNameNotEmpty() {
+            return customer -> !customer.name().isEmpty()
+                    ? ValidationResult.SUCCESS
+                    : ValidationResult.NAME_EMPTY;
+        }
+    }
 
 
     // TODO: 4 - Inside CustomerValidator, add a default method:
@@ -65,17 +103,27 @@ public class CombinatorPattern {
         //  CustomerValidator fullValidator = CustomerValidator.isEmailValid()
         //      .and(CustomerValidator.isAdult())
         //      .and(CustomerValidator.isNameNotEmpty());
-
+        CustomerValidator fullValidator = CustomerValidator.isEmailValid()
+                .and(CustomerValidator.isAdult())
+                .and(CustomerValidator.isNameNotEmpty());
 
         // TODO: 6 - Create a valid customer ("Alice", "alice@example.com", 25)
         //  and validate using fullValidator. Print the result.
         //  Expected: SUCCESS
+        Customer alice = new Customer("Alice", "alice@example.com", 25);
+        IO.println(fullValidator.apply(alice));;
 
 
         // TODO: 7 - Create and validate these invalid customers, printing each result:
         //  a) ("Bob", "bob-no-email", 30)    -> Expected: EMAIL_NOT_VALID
         //  b) ("", "young@email.com", 16)    -> Expected: NOT_ADULT
         //  c) ("", "valid@email.com", 25)    -> Expected: NAME_EMPTY
+        Customer bob = new Customer("Bob", "bob-no-email", 30);
+        Customer nil = new Customer("", "young@email.com", 16);
+        Customer nil2 = new Customer("", "valid@email.com", 25);
+        IO.println(fullValidator.apply(bob));
+        IO.println(fullValidator.apply(nil));
+        IO.println(fullValidator.apply(nil2));
 
     }
 }
