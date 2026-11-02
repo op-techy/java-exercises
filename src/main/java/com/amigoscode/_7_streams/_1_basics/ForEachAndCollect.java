@@ -21,28 +21,32 @@ public class ForEachAndCollect {
 
         // TODO: 1 - Use forEach to print each element of 'languages' on a separate line
         //           Use a lambda expression
-
+        languages.forEach(language -> IO.println(language));
 
         // TODO: 2 - Use forEach with a method reference to print each element of 'numbers'
         //           Use System.out::println
-
+        numbers.forEach(System.out::println);
 
         // TODO: 3 - Filter 'numbers' to keep even numbers, then collect the results to a List
         //           Print the resulting list
-
+        List<Integer> evenNumbers = numbers.stream().filter(n -> n % 2 == 0).toList();
+        IO.println(evenNumbers);
 
         // TODO: 4 - Collect 'languages' stream results to a Set (removes duplicates automatically)
         //           Print the resulting set
-
+        Set<String> languageSet = languages.stream().collect(Collectors.toSet());
+        IO.println(languageSet);
 
         // TODO: 5 - Collect 'numbers' stream to an unmodifiable list
         //           Use Collectors.toUnmodifiableList() or .toList()
         //           Print the result
-
+        List<Integer> unmodifiableList = numbers.stream().collect(Collectors.toUnmodifiableList());
+        IO.println(unmodifiableList);
 
         // TODO: 6 - Use Collectors.toCollection() to collect 'languages' into a LinkedList
         //           Print the resulting LinkedList and its class name to verify the type
         //           Hint: Collectors.toCollection(LinkedList::new)
-
+        LinkedList<String> linkedList = languages.stream().collect(Collectors.toCollection(LinkedList::new));
+        IO.println(linkedList);
     }
 }
