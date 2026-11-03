@@ -47,35 +47,49 @@ public class FilterExercise {
 
         // TODO: 1 - Filter 'people' to find persons older than 18
         //           Print each person's name and age
-
+        people.stream()
+                .filter(person -> person.age > 18)
+                .forEach(person -> IO.println("Name: " + person.name() + ", Age: " + person.age()));
 
         // TODO: 2 - Filter 'orders' with amount greater than 100
         //           Print each order's product and amount
-
+        orders.stream()
+                .filter(order -> order.amount() > 100)
+                .forEach(order -> IO.println("Product: " + order.product() + ", Amount: " + order.amount()));
 
         // TODO: 3 - Filter 'emails' keeping only valid ones matching a simple regex
         //           Use the pattern: ".+@.+\\..+"  (contains @ and a dot after it)
         //           Hint: Use String::matches in the filter predicate
         //           Print each valid email
-
+        emails.stream()
+                .filter(e -> e.matches(".+@.+\\..+"))
+                .forEach(IO::println);
 
         // TODO: 4 - Chain multiple filter conditions on 'people':
         //           Keep persons who are older than 18 AND live in "London"
         //           Print each matching person
-
+        people.stream()
+                .filter(p -> p.age() > 18)
+                .filter(p -> p.city().equals("London"))
+                .forEach(IO::println);
 
         // TODO: 5 - Create a Predicate<Order> variable called 'isExpensive' that checks
         //           if an order amount is >= 100. Use this predicate in filter().
         //           Print each matching order's product
-
+        Predicate<Order> isExpensive = order -> order.amount() >= 100;
+        orders.stream()
+                .filter(isExpensive)
+                .forEach(order -> IO.println(order.product()));
 
         // TODO: 6 - Filter 'people' with complex OR conditions:
         //           Keep persons who live in "Paris" OR are younger than 18
         //           Print each matching person
-
+        people.stream()
+                .filter(person -> person.city().equals("Paris") || person.age < 18)
+                .forEach(IO::println);
 
         // TODO: 7 - Count the number of COMPLETED orders
         //           Use filter + count() and print the result
-
+        IO.println(orders.stream().filter(order -> order.status().equals("COMPLETED")).count());
     }
 }
