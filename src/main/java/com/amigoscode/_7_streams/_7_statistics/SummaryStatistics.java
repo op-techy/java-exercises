@@ -33,27 +33,36 @@ public class SummaryStatistics {
         // TODO: 1 - Get IntSummaryStatistics from the 'scores' list
         //           Use mapToInt and summaryStatistics()
         //           Store the result in a variable
-
+        IntSummaryStatistics intSummaryStatistics = scores.stream().mapToInt(Integer::intValue).summaryStatistics();
 
         // TODO: 2 - Print the count, sum, min, max, and average from the
         //           IntSummaryStatistics obtained in TODO 1
         //           Use getCount(), getSum(), getMin(), getMax(), getAverage()
-
+        IO.println(intSummaryStatistics.getCount());
+        IO.println(intSummaryStatistics.getSum());
+        IO.println(intSummaryStatistics.getMin());
+        IO.println(intSummaryStatistics.getMax());
+        IO.println(intSummaryStatistics.getAverage());
 
         // TODO: 3 - Use the Collectors.summarizingInt() collector to get
         //           IntSummaryStatistics for unitsSold from 'sales'
         //           Print the result
-
+        IntSummaryStatistics salesStats = sales.stream().collect(Collectors.summarizingInt(Sale::unitsSold));
+        IO.println(salesStats);
 
         // TODO: 4 - Create DoubleSummaryStatistics for the sale amounts from 'sales'
         //           Use mapToDouble and summaryStatistics()
         //           Print all the statistics
-
+        DoubleSummaryStatistics amountStats = sales.stream().mapToDouble(Sale::amount).summaryStatistics();
+        IO.println(amountStats);
 
         // TODO: 5 - Combine two IntSummaryStatistics:
         //           Create stats for 'batch1' and 'batch2' separately,
         //           then use the combine() method to merge them
         //           Print the combined statistics
-
+        IntSummaryStatistics batch1Stats = batch1.stream().mapToInt(Integer::intValue).summaryStatistics();
+        IntSummaryStatistics batch2Stats = batch2.stream().mapToInt(Integer::intValue).summaryStatistics();
+        batch1Stats.combine(batch2Stats);
+        IO.println(batch1Stats);
     }
 }

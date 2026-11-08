@@ -48,38 +48,57 @@ public class GroupingBy {
         // TODO: 1 - Group 'people' by city
         //           Result type: Map<String, List<Person>>
         //           Print each city and its list of people
-
+        Map<String, List<Person>> byCity = people.stream().collect(Collectors.groupingBy(Person::city));
+        byCity.forEach((city, persons) -> IO.println(city + ": " + persons));
+        IO.println();
 
         // TODO: 2 - Group 'orders' by status
         //           Print each status and its list of orders
-
+        Map<String, List<Order>> byStatus = orders.stream().collect(Collectors.groupingBy(Order::status));
+        byStatus.forEach((status, o) -> IO.println(status + ": " + o));
+        IO.println();
 
         // TODO: 3 - Group 'words' by their first letter
         //           Hint: Use word.charAt(0) or word.substring(0, 1)
         //           Print each letter and its words
-
+        Map<Character, List<String>> byChar = words.stream()
+                .collect(Collectors.groupingBy(word -> word.charAt(0)));
+        byChar.forEach((firstLetter, wordList) -> IO.println(firstLetter + ": " + wordList));
+        IO.println();
 
         // TODO: 4 - Group 'orders' by status and count how many orders per status
         //           Use Collectors.groupingBy with Collectors.counting() as downstream
         //           Print each status and its count
-
+        Map<String, Long> countByStatus = orders.stream()
+                .collect(Collectors.groupingBy(Order::status, Collectors.counting()));
+        countByStatus.forEach((orderName, count) -> IO.println(orderName + ": " + count));
+        IO.println();
 
         // TODO: 5 - Group 'orders' by status and sum the amounts per status
         //           Use Collectors.groupingBy with Collectors.summingDouble as downstream
         //           Print each status and its total amount
-
+        Map<String, Double> sumByStatus = orders.stream()
+                .collect(Collectors.groupingBy(Order::status, Collectors.summingDouble(Order::amount)));
+        sumByStatus.forEach((orderName, amount) -> IO.println(orderName + ": " + amount));
+        IO.println();
 
         // TODO: 6 - Group 'people' by city and collect names to a Set
         //           Use Collectors.groupingBy with Collectors.mapping + Collectors.toSet()
         //           Print each city and its set of names
-
+        Map<String, Set<String>> namesByCity = people.stream()
+                .collect(Collectors.groupingBy(Person::city, Collectors.mapping(Person::name, Collectors.toSet())));
+        namesByCity.forEach((city, name) -> IO.println(city + ": " + name));
+        IO.println();
 
         // TODO: 7 - Multi-level grouping: group 'people' by city, then by age range
         //           Age ranges: "Young" (< 25), "Adult" (25-35), "Senior" (> 35)
         //           Use nested groupingBy
         //           Hint: Create a helper method getAgeRange(int age)
         //           Print the result
-
+        Map<String, Map<String, List<Person>>> multiLevel = people.stream()
+                .collect(Collectors.groupingBy(Person::city, Collectors.groupingBy(person -> getAgeRange(person.age()))));
+        multiLevel.forEach((city, ageMap) -> IO.println(city + ": " + ageMap));
+        IO.println();
     }
 
     // Helper method for TODO 7
